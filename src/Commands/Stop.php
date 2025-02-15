@@ -6,7 +6,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\App;
 use T2\Console\Application;
 use Throwable;
 use function class_exists;
@@ -37,8 +36,8 @@ class Stop extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (class_exists(App::class)) {
-            App::run();
+        if (class_exists(\App\Application::class)) {
+            \App\Application::run();
             return self::SUCCESS;
         }
         Application::run();

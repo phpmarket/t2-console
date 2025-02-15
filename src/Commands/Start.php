@@ -2,7 +2,6 @@
 
 namespace T2\Console\Commands;
 
-use App\App;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -40,8 +39,8 @@ class Start extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (class_exists(App::class)) {
-            App::run();
+        if (class_exists(\App\Application::class)) {
+            \App\Application::run();
             return self::SUCCESS;
         }
         Application::run();
