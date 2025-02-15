@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use T2\Config;
 use T2\Console\Command;
-use T2\Util;
 
 if (!Phar::running()) {
     chdir(__DIR__);
@@ -28,7 +27,7 @@ if ($errorReporting = $appConfig['error_reporting'] ?? '') {
 if (!in_array($argv[1] ?? '', ['start', 'restart', 'stop', 'status', 'reload', 'connections'])) {
     require_once __DIR__ . '/vendor/phpmarket/t2-framework/src/App/bootstrap.php';
 } else {
-    if (class_exists('App\Application')) {
+    if (class_exists("App\\Application")) {
         App\Application::loadAllConfig(['route']);
     } else {
         Config::reload(config_path(), ['route', 'container']);
@@ -37,8 +36,5 @@ if (!in_array($argv[1] ?? '', ['start', 'restart', 'stop', 'status', 'reload', '
 $cli = new Command();
 $cli->setName('T2Engine cli');
 $cli->installInternalCommands();
-$command_path = Util::guessPath(app_path(), '/command', true);
-if ($command_path && is_dir($command_path)) {
-    $cli->installCommands($command_path);
-}
+
 $cli->run();
