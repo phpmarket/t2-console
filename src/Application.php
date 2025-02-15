@@ -61,7 +61,6 @@ class Application
                 }
             }
         };
-
         $config = config('server');
         Worker::$pidFile = $config['pid_file'];
         Worker::$stdoutFile = $config['stdout_file'];
@@ -75,7 +74,7 @@ class Application
             Worker::$stopTimeout = $config['stop_timeout'] ?? 2;
         }
 
-        if ($config['listen']) {
+        if ($config['listen'] ?? false) {
             $worker = new Worker($config['listen'], $config['context']);
             $property_map = [
                 'name',
@@ -94,7 +93,7 @@ class Application
 
             $worker->onWorkerStart = function ($worker) {
                 require_once base_path() . '/support/bootstrap.php';
-                $app = new App($worker, Container::instance(), Log::channel('default'), app_path());
+                $app = new App(config('app.request_class', Request::class), Log::channel(), app_path(), public_path());
                 Http::requestClass(config('app.request_class', config('server.request_class', Request::class)));
                 $worker->onMessage = [$app, 'onMessage'];
             };
