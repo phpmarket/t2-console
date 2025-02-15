@@ -99,7 +99,7 @@ class Application
             };
         }
 
-        // Windows does not support custom processes.
+        // Windows does not App custom processes.
         if (DIRECTORY_SEPARATOR === '/') {
             foreach (config('process', []) as $process_name => $config) {
                 // Remove monitor process.
