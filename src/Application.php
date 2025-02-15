@@ -39,13 +39,8 @@ class Application
             }
         }
 
-        if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
-            if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
-                Dotenv::createUnsafeImmutable(base_path())->load();
-            } else {
-                Dotenv::createMutable(base_path())->load();
-            }
-        }
+        // 加载 .env 环境变量文件
+        loadEnvironmentVariables(base_path() . DIRECTORY_SEPARATOR . '.env');
 
         Config::reload(config_path(), ['route', 'container']);
 
