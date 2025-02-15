@@ -4,12 +4,7 @@ namespace T2\Console;
 
 class Install
 {
-    /**
-     * 常量：IS_PLUGIN
-     * 用于标识当前类是否为 T2Engine 插件
-     * 值为 true，表示是 T2Engine 插件
-     */
-    const true IS_PLUGIN = true;
+    const bool IS_INSTALL = true;
 
     /**
      * @var array $pathRelation
