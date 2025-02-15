@@ -92,7 +92,7 @@ class Application
             }
 
             $worker->onWorkerStart = function ($worker) {
-                require_once base_path() . '/support/bootstrap.php';
+                require_once base_path() . '/vendor/phpmarket/t2-framework/src/App/bootstrap.php';
                 $app = new App(config('app.request_class', Request::class), Log::channel(), app_path(), public_path());
                 Http::requestClass(config('app.request_class', config('server.request_class', Request::class)));
                 $worker->onMessage = [$app, 'onMessage'];
