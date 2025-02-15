@@ -2,7 +2,6 @@
 
 namespace T2\Console;
 
-use App\Container;
 use App\Log;
 use App\Request;
 use Phar;
@@ -14,9 +13,6 @@ use Workerman\Protocols\Http;
 use Workerman\Worker;
 use const DIRECTORY_SEPARATOR;
 
-ini_set('display_errors', 'on');
-error_reporting(E_ALL);
-
 class Application
 {
     /**
@@ -26,6 +22,9 @@ class Application
      */
     public static function run(): void
     {
+        ini_set('display_errors', 'on');
+        error_reporting(E_ALL);
+
         $runtime_logs_path = runtime_path() . DIRECTORY_SEPARATOR . 'logs';
         if (!file_exists($runtime_logs_path) || !is_dir($runtime_logs_path)) {
             if (!mkdir($runtime_logs_path, 0777, true)) {

@@ -20,7 +20,7 @@ class Install
      */
     protected static array $pathRelation = [
         'config/console.php' => 'config/console.php', // 配置文件
-        'start'              => 'start', // 启用脚本
+        'artisan'            => 'artisan', // 启用脚本
     ];
 
     /**
