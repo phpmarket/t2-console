@@ -16,7 +16,7 @@ class Version extends Command
     /**
      * @var string
      */
-    protected static string $defaultDescription = 'Show T2 engine version';
+    protected static string $defaultDescription = 'Show T2Engine version';
 
     /**
      * @param InputInterface  $input
@@ -30,8 +30,8 @@ class Version extends Command
         if (is_file($installed_file)) {
             $version_info = include $installed_file;
         }
-        $t2_engine_version = $version_info['versions']['t2cn/engine']['pretty_version'] ?? '';
-        $output->writeln("T2 Engine $t2_engine_version");
+        $version = $version_info['versions']['phpmarket/t2-console']['pretty_version'] ?? '';
+        $output->writeln("T2Engine $version");
         return self::SUCCESS;
     }
 }
