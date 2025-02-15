@@ -1,0 +1,37 @@
+{
+  "name": "phpmarket/t2-console",
+  "type": "library",
+  "keywords": [
+    "T2Engine Console"
+  ],
+  "homepage": "https://www.t2engine.cn",
+  "license": "MIT",
+  "description": "T2Engine Console",
+  "authors": [
+    {
+      "name": "Tony",
+      "email": "lucky@t2engine.cn",
+      "homepage": "https://www.t2engine.cn",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "dev@t2engine.cn",
+    "issues": "https://github.com/phpmarket/t2-console/issues",
+    "forum": "https://forum.t2engine.cn/",
+    "wiki": "https://wiki.t2engine.cn/",
+    "source": "https://github.com/phpmarket/t2-console"
+  },
+  "require": {
+    "php": ">=8.3",
+    "symfony/console": ">=5.0"
+  },
+  "require-dev": {
+    "phpmarket/t2-engine": "^1.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "T2\\Console\\": "src"
+    }
+  }
+}
