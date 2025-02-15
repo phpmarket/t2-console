@@ -38,7 +38,6 @@ class RouteList extends Command
                 $rows[] = [$route->getPath(), $method, $cb, json_encode($route->getMiddleware() ?: null), $route->getName()];
             }
         }
-
         $table = new Table($output);
         $table->setHeaders($headers);
         $table->setRows($rows);

@@ -12,80 +12,103 @@ class Install
     const true IS_PLUGIN = true;
 
     /**
-     * @var array 目录关系映射
-     * 用于定义源路径和目标路径之间的关系，用于安装和卸载时的文件操作。
+     * @var array $pathRelation
+     * 路径映射关系
+     * 键：源文件路径（相对于当前目录）
+     * 值：目标文件路径（相对于项目根目录）
+     * 作用：用于在安装时，将源文件复制到目标位置
      */
     protected static array $pathRelation = [
-        'config' => 'config',
+        'config/console.php' => 'config/console.php', // 配置文件
     ];
 
     /**
-     * 安装方法
-     * 检查是否已存在指定的安装目录，如果存在则提示失败，否则执行安装逻辑。
+     * Install
      *
      * @return void
      */
     public static function install(): void
     {
-        $dest = base_path() . "/start"; // 定义目标安装目录
-        // 检查目标目录是否已存在
-        if (is_dir($dest)) {
-            echo "Installation failed, please remove directory $dest\n";
-            return;
-        }
-        // 复制安装文件到目标目录
-        copy(__DIR__ . "/start", $dest);
-        // 设置目标目录权限
-        chmod(base_path() . "/start", 0755);
-        // 执行基于路径关系的安装逻辑
         static::installByRelation();
     }
 
     /**
-     * 卸载方法
-     * 删除安装目录和相关文件。
+     * Uninstall
      *
      * @return void
      */
     public static function uninstall(): void
     {
-        // 检查并删除目标安装文件
-        if (is_file(base_path() . "/start")) {
-            @unlink(base_path() . "/start");
-        }
-        // 执行基于路径关系的卸载逻辑
         self::uninstallByRelation();
     }
 
     /**
-     * 根据路径关系安装相关文件
-     * 遍历路径关系数组，将源文件复制到目标位置。
+     * installByRelation
      *
      * @return void
      */
     public static function installByRelation(): void
     {
         foreach (static::$pathRelation as $source => $dest) {
-            // 将源目录内容复制到目标目录
-            copy_dir(__DIR__ . "/$source", base_path() . "/$dest");
+            $parentDir = base_path(dirname($dest));
+            if (!is_dir($parentDir)) {
+                mkdir($parentDir, 0777, true);
+            }
+            $destFile = base_path($dest);
+            $sourceFile = __DIR__ . "/$source";
+            // 如果目标文件已存在，跳过复制，但仍尝试删除源文件
+            if (!file_exists($destFile)) {
+                // 复制目录或文件到目标路径（递归复制）
+                copy_dir($sourceFile, $destFile, true);
+                echo "Create $dest\r\n";
+            }
+            if (is_file($sourceFile) && is_writable($sourceFile)) {
+                @unlink($sourceFile);
+            } elseif (is_dir($sourceFile)) {
+                self::recursiveRemoveDir($sourceFile);
+            }
         }
     }
 
     /**
-     * 根据路径关系卸载相关文件
-     * 遍历路径关系数组，仅删除目标路径下的 `console.php` 文件。
+     * 递归删除目录及其内容
+     *
+     * @param string $dir 目录路径
+     *
+     * @return void
+     */
+    private static function recursiveRemoveDir(string $dir): void
+    {
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach ($files as $file) {
+            $path = "$dir/$file";
+            if (is_dir($path)) {
+                self::recursiveRemoveDir($path);
+            } else {
+                @unlink($path);
+            }
+        }
+        @rmdir($dir);
+    }
+
+    /**
+     * uninstallByRelation
      *
      * @return void
      */
     public static function uninstallByRelation(): void
     {
         foreach (static::$pathRelation as $dest) {
-            $file = base_path() . "/$dest/console.php"; // 目标文件路径
-            // 如果目标文件存在，删除该文件
-            if (is_file($file)) {
-                @unlink($file);
-                echo "Deleted: $file\n";
+            $path = base_path() . "/$dest";
+            if (!is_dir($path) && !is_file($path)) {
+                continue;
             }
+            echo "Remove $dest\r\n";
+            if (is_file($path) || is_link($path)) {
+                unlink($path);
+                continue;
+            }
+            remove_dir($path);
         }
     }
 }
